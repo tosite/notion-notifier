@@ -1,0 +1,26 @@
+name: Notion Notifier
+
+on:
+  schedule:
+    - cron: '00,15,30,45 19 * * 1-5'
+
+jobs:
+  sync:
+    name: Notion Notifier
+    runs-on: ubuntu-latest
+    env:
+      TZ: Asia/Tokyo
+      LANG: ja_JP.UTF-8
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Run
+        env:
+          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          MEETING_DB_ID: ${{ secrets.MEETING_DB_ID }}
+        run: |
+          apt-get update -qqy && apt-get install -qqy unzip curl
+          curl -fsSL https://deno.land/x/install/install.sh | sh
+          /home/runner/.deno/bin/deno run -A --import-map ./import_map.json ./src/index.ts
+

@@ -1,0 +1,5 @@
+name: 'Notion Notifier'
+description: 'Automatic Notification of Notion Pages'
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
