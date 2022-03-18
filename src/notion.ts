@@ -31,7 +31,7 @@ export const fetchMeetingPages = async (notion: Client, databaseId: string, date
     nextCursor = pages['next_cursor']
     if (!nextCursor) {
       return {
-        domain,
+        domain: domain,
         entries: target,
       }
     }

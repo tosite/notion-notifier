@@ -15,6 +15,7 @@ if (!meetingDbId) {
 const main = async () => {
   console.log('==== start process ======================')
   const meetingPages = await fetchMeetingPages(notion, meetingDbId, '開催日')
+  const url = meetingPages.domain
   for (const page of meetingPages.entries) {
     console.log('  == start notification =================')
     console.log(`  id: '${page.id}'`)
@@ -29,7 +30,7 @@ const main = async () => {
       continue
     }
     updatelastNotifiedAt(notion, page.id, lastNotifiedAt)
-    const uri = `${page.domain}/${page.id.replace(/-/g, '')}`
+    const uri = `${url}/${page.id.replace(/-/g, '')}`
     const time = dayjs(lastNotifiedAt).format('YYYY-MM-DD')
     await slack.send(
       okMessage(
