@@ -10,37 +10,29 @@ export const targetDate = (targetDate: string, lastNotifiedAt: string | null, sp
   const t = dayjs(targetDate)
   const tf = t.format('YYYY-MM-DDTHH:mm:ssZZ')
   const tz = t.format('HH:mm:ssZZ')
+  const n = `${dayjs().format('YYYY-MM-DD')}T${tz}`
 
   for (const span of spans) {
+    let s = 0
     if (span === '1週間前') {
-      const d = `${dayjs().add(7, 'd').format('YYYY-MM-DD')}T${tz}`
-      if (d === tf && l > d) {
-        return d
-      }
+      s = 7
     }
     if (span === '3日前') {
-      const d = `${dayjs().add(3, 'd').format('YYYY-MM-DD')}T${tz}`
-      if (d === tf && l > d) {
-        return d
-      }
+      s = 3
     }
     if (span === '2日前') {
-      const d = `${dayjs().add(2, 'd').format('YYYY-MM-DD')}T${tz}`
-      if (d === tf && l > d) {
-        return d
-      }
+      s = 2
     }
     if (span === '1日前') {
-      const d = `${dayjs().add(1, 'd').format('YYYY-MM-DD')}T${tz}`
-      if (d === tf && l > d) {
-        return d
-      }
+      s = 1
     }
     if (span === '当日') {
-      const d = `${dayjs().format('YYYY-MM-DD')}T${tz}`
-      if (d === tf && l > d) {
-        return d
-      }
+      s = 0
+    }
+
+    const d = `${dayjs().add(s, 'd').format('YYYY-MM-DD')}T${tz}`
+    if (d === tf && l < d) {
+      return n
     }
   }
   return null
