@@ -2,7 +2,7 @@ name: Notion Notifier
 
 on:
   schedule:
-    - cron: '00,15,30,45 2 * * 1-5'
+    - cron: '00,15,30,45 5,10 * * 1-5'
 
 jobs:
   sync:
