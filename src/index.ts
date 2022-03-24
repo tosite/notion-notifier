@@ -24,22 +24,25 @@ const main = async () => {
       continue
     }
     const lastNotifiedAt = targetDate(page.targetDate, page.lastNotifiedAt, page.spans)
-    console.log(`  target_date: '${page.targetDate}', last_nofificated_at: '${lastNotifiedAt}'`)
     if (!lastNotifiedAt) {
       console.log('  == [skip] it is not time. =============')
       continue
     }
     updatelastNotifiedAt(notion, page.id, lastNotifiedAt)
     const uri = `${url}/${page.id.replace(/-/g, '')}`
-    const time = dayjs(lastNotifiedAt).format('YYYY-MM-DD')
+    const time = dayjs(page.targetDate).format('YYYY-MM-DD')
+    let messages:string[] = []
+    if (time === dayjs().format('YYYY-MM-DD')) {
+      messages = ['<!here>']
+    }
+    messages = messages.concat([
+      `${time}にMTGが開催されるよ！`,
+      '当日までに忘れずに議事録を更新してね！🙏',
+      `url 👉 https://${uri}`,
+    ])
+    messages.concat()
     await slack.send(
-      okMessage(
-        [
-          `${time}にMTGが開催されるよ！`,
-          '当日までに忘れずに議事録を更新してね！🙏',
-          `url 👉 https://${uri}`,
-        ].join('\n'),
-      ),
+      okMessage(messages.join('\n'),),
     ).catch(() => {
     })
     console.log('  == start notification =================')
