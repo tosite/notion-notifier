@@ -6,7 +6,7 @@ export const ngMessage = (text: string, title: string) => ({
 })
 
 export const targetDate = (targetDate: string, lastNotifiedAt: string | null, spans: string[]): string|null => {
-  const l = (!lastNotifiedAt ? dayjs().add(30, 'd') : dayjs(lastNotifiedAt)).format('YYYY-MM-DDTHH:mm:ssZZ')
+  const l = (!lastNotifiedAt ? dayjs().subtract(30, 'd') : dayjs(lastNotifiedAt)).format('YYYY-MM-DDTHH:mm:ssZZ')
   const t = dayjs(targetDate)
   const tf = t.format('YYYY-MM-DDTHH:mm:ssZZ')
   const tz = t.format('HH:mm:ssZZ')
@@ -31,6 +31,7 @@ export const targetDate = (targetDate: string, lastNotifiedAt: string | null, sp
     }
 
     const d = `${dayjs().add(s, 'd').format('YYYY-MM-DD')}T${tz}`
+    console.log(`  now: '${d}', target_date: '${tf}', last_nofificated_at: '${l}'`)
     if (d === tf && l < d) {
       return n
     }
