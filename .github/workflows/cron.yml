@@ -21,6 +21,6 @@ jobs:
           MEETING_DB_ID: ${{ secrets.MEETING_DB_ID }}
         run: |
           apt-get update -qqy && apt-get install -qqy unzip curl
-          curl -fsSL https://deno.land/x/install/install.sh | sh
+          curl -fsSL https://deno.land/x/install/install.sh | sh -s v1.17.2
           /home/runner/.deno/bin/deno run -A --import-map ./import_map.json ./src/index.ts
 
