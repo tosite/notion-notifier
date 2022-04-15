@@ -5,12 +5,13 @@ export const ngMessage = (text: string, title: string) => ({
   text: [`⛔ ${text}`, `[ *title:${title}* ]`].join('\n'),
 })
 
-export const targetDate = (targetDate: string, lastNotifiedAt: string | null, spans: string[]): string|null => {
-  const l = (!lastNotifiedAt ? dayjs().subtract(30, 'd') : dayjs(lastNotifiedAt)).format('YYYY-MM-DDTHH:mm:ssZZ')
+export const targetDate = (targetDate: string, lastNotifiedAt: string | null, spans: string[], nowInjection: string | null = null): string | null => {
+  const now = nowInjection ? dayjs(nowInjection) : dayjs()
+  const formattedLastNotifiedAt = (!lastNotifiedAt ? now.subtract(30, 'd') : dayjs(lastNotifiedAt)).format('YYYY-MM-DDTHH:mm:ssZZ')
   const t = dayjs(targetDate)
-  const tf = t.format('YYYY-MM-DDTHH:mm:ssZZ')
+  const formattedTargetDate = t.format('YYYY-MM-DDTHH:mm:ssZZ')
   const tz = t.format('HH:mm:ssZZ')
-  const n = `${dayjs().format('YYYY-MM-DD')}T${tz}`
+  const n = `${now.format('YYYY-MM-DD')}T${tz}`
 
   for (const span of spans) {
     let s = 0
@@ -30,9 +31,17 @@ export const targetDate = (targetDate: string, lastNotifiedAt: string | null, sp
       s = 0
     }
 
-    const d = `${dayjs().add(s, 'd').format('YYYY-MM-DD')}T${tz}`
-    console.log(`  now: '${d}', target_date: '${tf}', last_nofificated_at: '${l}'`)
-    if (d === tf && l < d) {
+    const formattedAdditionalDate = `${now.add(s, 'd').format('YYYY-MM-DD')}T${tz}`
+    const formattedNow = `${now.format('YYYY-MM-DD')}T${tz}`
+    console.log(
+      [
+        `  now: '${formattedNow}'`,
+        `target_date: '${formattedTargetDate}'`,
+        `additional_date: ${formattedAdditionalDate}`,
+        `last_notified_at: '${formattedLastNotifiedAt}'`,
+      ].join(', ')
+    )
+    if (formattedLastNotifiedAt !== formattedNow && formattedLastNotifiedAt < formattedNow && formattedAdditionalDate === formattedTargetDate) {
       return n
     }
   }
